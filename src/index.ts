@@ -4,13 +4,16 @@ import { pipeWith as p } from "pipe-ts"
 // Definition
 
 export interface EventStream<T>
-  { (subscriber: (value: T) => void): Unsubscribe }
+  { (subscriber: (value: T) => void): Unsubscribe}
 
 type Unsubscribe =
   () => void
 
 type Subscribe =
   <T>(f: (v: T) => void) => ($: EventStream<T>) => Unsubscribe
+
+export interface HasFirstValue
+  { readonly __hasFirstValue: unique symbol }
 
 export const subscribe: Subscribe = f => $ => {
   let u = false
@@ -51,11 +54,20 @@ export const createSubject = createSubjectImpl as CreateSubject
 // Functor
 
 type Map =
-  <T, U>(f: (t: T) => U) =>
-    ($: EventStream<T>) => EventStream<U>
+  <$ extends EventStream<unknown>, U>
+  (f: (t: $ extends EventStream<infer T> ? T : never) => U) =>
+    ($: $) =>
+      & EventStream<U>
+      & ($ extends HasFirstValue ? HasFirstValue : unknown) 
 
-export const map: Map = f =>
+type MapImpl = 
+  (f: (t: "T") => "U") =>
+    ($: EventStream<"T">) => EventStream<"U">
+
+export const mapImpl: MapImpl = f =>
   $ => s => p($, subscribe(t => s(f(t))))
+
+export const map = mapImpl as Map
 
 
 
@@ -108,8 +120,9 @@ export const skip: Skip = n => $ => s => p($, subscribe(t => {
 // Apply
 
 type Combine = 
-  <Ts extends EventStream<unknown>[]>($s: [...Ts]) =>
-    EventStream<{ [I in keyof Ts]: Ts[I] extends EventStream<infer V> ? V : never }>
+  <$s extends EventStream<unknown>[]>($s: [...$s]) =>
+    & EventStream<{ [I in keyof $s]: $s[I] extends EventStream<infer V> ? V : never }>
+    & ($s[number] extends HasFirstValue ? HasFirstValue : unknown)
 
 type CombineImpl =
   ($s: EventStream<"T">[]) => EventStream<"T"[]>
@@ -137,12 +150,13 @@ export const combine = combineImpl as Combine
 
 
 type SampleCombine =
-  <Ts extends EventStream<unknown>[]>($: [...Ts]) =>
-    <U>($: EventStream<U>) =>
-      EventStream<
-        [ U
-        , ...{ [I in keyof Ts]: Ts[I] extends EventStream<infer V> ? V : never }
-        ]>
+  <T$s extends EventStream<unknown>[], U$ extends EventStream<unknown>>($: [...T$s]) =>
+    ($: U$) =>
+      & EventStream<
+          [ U$ extends EventStream<infer U> ? U : never
+          , ...{ [I in keyof T$s]: T$s[I] extends EventStream<infer V> ? V : never }
+          ]>
+      & ((U$ | T$s[number]) extends HasFirstValue ? HasFirstValue : unknown)
 
 type SampleCombineImpl =
   ($: EventStream<"T">[]) =>
@@ -169,9 +183,17 @@ export const sampleCombine = sampleCombineImpl as SampleCombine
 // ----------------------------------------
 // Applicative
 
-type Of = <T>(a: T) => EventStream<T>
-export const of: Of = a =>
+type Of =
+  <T>(a: T) =>
+    EventStream<T> & HasFirstValue
+
+type OfImpl = 
+  (a: "T") => EventStream<"T">
+
+const ofImpl: OfImpl = a =>
   s => (s(a), () => {})
+
+export const of = ofImpl as Of
 
 
 
@@ -180,8 +202,9 @@ export const of: Of = a =>
 // Semigroup
 
 type Merge = 
-  <Ts extends EventStream<unknown>[]>($s: [...Ts]) =>
-    EventStream<{ [I in keyof Ts]: Ts[I] extends EventStream<infer V> ? V : never }[number]>
+  <T$s extends EventStream<unknown>[]>($s: [...T$s]) =>
+    & EventStream<{ [I in keyof T$s]: T$s[I] extends EventStream<infer V> ? V : never }[number]>
+    & (UnionToIntersection<T$s[number]> extends HasFirstValue ? HasFirstValue : unknown)
 
 type MergeImpl =
   ($s: EventStream<"T">[]) => EventStream<"T">
@@ -210,18 +233,26 @@ export const never: Never = _s => () => {}
 // Bind
 
 type FlatMap = 
-  <T, U>(f: (t: T) => EventStream<U>) =>
-    ($: EventStream<T>) => EventStream<U>
+  <T$ extends EventStream<unknown>, U$ extends EventStream<unknown>>
+  (f: (t: T$ extends EventStream<infer T> ? T : never) => U$) =>
+    ($: T$) =>
+      & EventStream<U$ extends EventStream<infer U> ? U : never>
+      & ([T$, U$] extends [HasFirstValue, HasFirstValue] ? HasFirstValue : unknown)
 
-export const flatMap: FlatMap = f => $ => s => {
+type FlatMapImpl =
+  (f: (t: "T") => EventStream<"U">) =>
+    ($: EventStream<"T">) => EventStream<"U">
+
+const flatMapImpl: FlatMapImpl = f => $ => s => {
   let dU = () => {}
   let dT = p($, subscribe(t => {
     dU()
-    dU = f(t)(s)
+    dU = p(f(t), subscribe(s))
   }))
   return () => (dT(), dU())
 }
 
+export const flatMap = flatMapImpl as FlatMap
 
 
 
@@ -230,12 +261,16 @@ export const flatMap: FlatMap = f => $ => s => {
 
 type Reduce =
   <T, A>(f: (a: A, t: T) => A, a: A) =>
-    ($: EventStream<T>) => EventStream<A>
+    ($: EventStream<T>) => EventStream<A> & HasFirstValue
 
-export const reduce: Reduce = (f, a) => $ =>
+type ReduceImpl =
+  (f: (a: "A", t: "T") => "A", a: "A") =>
+    ($: EventStream<"T">) => EventStream<"A">
+
+const reduceImpl: ReduceImpl = (f, a) => $ =>
   s => (s(a), p($, subscribe(t => s(a = f(a, t)))))
 
-
+export const reduce = reduceImpl as Reduce
 
 
 // ----------------------------------------
@@ -291,3 +326,8 @@ const aEvery = ((t: any, p: any) => t.every(p)) as AEvery
 
 const isNotNothing =
   <T>(t: T): t is Exclude<T, Nothing> => t !== nothing
+
+type UnionToIntersection<U> =
+  (U extends unknown ? (u: U) => void : never) extends (i: infer I) => void
+    ? I
+    : never

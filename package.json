@@ -7,7 +7,8 @@
   "module": "dist/devanshj-event.esm.js",
   "license": "MIT",
   "scripts": {
-    "build": "preconstruct build"
+    "build": "preconstruct build",
+    "postinstall": "preconstruct dev"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.28.5",

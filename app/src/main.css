@@ -1,0 +1,92 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  user-select: none;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  background: #e8e8e8;
+  padding: 10px;
+  border-radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  #root {
+    background: #101010;
+  }
+}
+
+.boxes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box {
+  width: 50px;
+  height: 50px;
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border-radius: 2px;
+  z-index: 0;
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+@media (prefers-color-scheme: dark) {
+  .box {
+    background: #1e1e1e;
+    color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.32), 0 1px 2px rgba(0, 0, 0, 0.44);
+  }
+}
+
+.box-outer {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.box.is-dragging {
+  cursor: grabbing;
+  z-index: 1;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.18);
+}
+@media (prefers-color-scheme: dark) {
+  .box.is-dragging {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45), 0 10px 10px rgba(0, 0, 0, 0.38);
+  }
+}
+
+
+.box.delete {
+  cursor: unset;
+  font-weight: 400;
+  background: tomato;
+  color: white;
+  padding: 15px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.16), inset 0 0 6px rgba(0, 0, 0, 0.28);
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 0.8em;
+  color: rgba(0, 0, 0, 0.38);
+}
+@media (prefers-color-scheme: dark) {
+  .hint {
+    color: rgba(255, 255, 255, 0.38);
+  }
+}
