@@ -1,0 +1,20 @@
+{
+  "name": "@devanshj/event",
+  "version": "0.0.1",
+  "description": "A simple FRP library",
+  "type": "module",
+  "main": "dist/devanshj-event.cjs.js",
+  "module": "dist/devanshj-event.esm.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "preconstruct build"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.27.1",
+    "@preconstruct/cli": "^2.8.12",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "pipe-ts": "^0.0.9"
+  }
+}
