@@ -6,7 +6,10 @@
   "main": "dist/devanshj-event.cjs.js",
   "module": "dist/devanshj-event.esm.js",
   "preconstruct": {
-    "entrypoints": ["index.ts", "react.ts"]
+    "entrypoints": [
+      "index.ts",
+      "react.ts"
+    ]
   },
   "license": "MIT",
   "scripts": {
@@ -16,8 +19,8 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.28.5",
     "@preconstruct/cli": "^2.8.12",
-    "typescript": "^5.9.3",
-    "@types/react": "^19.2.2"
+    "@types/react": "^19.2.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "pipe-ts": "^0.0.9",
