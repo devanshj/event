@@ -15,7 +15,15 @@
     "dist",
     "react"
   ],
+  "author": {
+    "name": "Devansh Jethmalani",
+    "email": "jethmalani.devansh@gmail.com"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devanshj/event.git"
+  },
   "scripts": {
     "postinstall": "preconstruct dev"
   },
