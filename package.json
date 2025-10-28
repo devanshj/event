@@ -17,7 +17,6 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "preconstruct build",
     "postinstall": "preconstruct dev"
   },
   "devDependencies": {
