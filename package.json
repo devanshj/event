@@ -11,6 +11,10 @@
       "react.ts"
     ]
   },
+  "files": [
+    "dist",
+    "react"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "preconstruct build",
