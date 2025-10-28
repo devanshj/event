@@ -1,0 +1,4 @@
+{
+  "main": "dist/devanshj-event-react.cjs.js",
+  "module": "dist/devanshj-event-react.esm.js"
+}

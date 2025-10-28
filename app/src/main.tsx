@@ -1,6 +1,7 @@
 import * as Re from "react"
 import * as ReDom from "react-dom/client"
 import * as Ev from "@devanshj/event"
+import * as EvRe from "@devanshj/event/react"
 import { pipeWith as p } from "pipe-ts"
 import "./main.css"
 
@@ -39,7 +40,7 @@ const Box = ({ id, deleteBoxRef, onDrop: _onDrop }: { id: string, deleteBoxRef: 
       ]), Ev.map(() => false))
     ])
   )
-  let isDragging = useValue(isDragging$)
+  let isDragging = EvRe.useValue(isDragging$)
 
   let draggingPositionDelta$ = useConstant(() => Ev.merge([
     Ev.of({ x: 0, y: 0 }),
@@ -52,7 +53,7 @@ const Box = ({ id, deleteBoxRef, onDrop: _onDrop }: { id: string, deleteBoxRef: 
         ]),
         Ev.map(e => e.type === "mousemove" ? (e as MouseEvent) : (e as TouchEvent).touches[0]),
         Ev.map(e => ({ x: e.clientX, y: e.clientY })),
-        $ => p($, Ev.sampleCombine([evPrevious($, undefined)])),
+        $ => p($, Ev.sampleCombine([Ev.previous($, undefined)])),
         Ev.map(([c, p]) =>
           p === undefined ? { x: 0, y: 0 } :
           { x: c.x - p.x, y: c.y - p.y }
@@ -65,7 +66,7 @@ const Box = ({ id, deleteBoxRef, onDrop: _onDrop }: { id: string, deleteBoxRef: 
     )
   ]))
 
-  let canDrop = useValue(useConstant(() => p(
+  let canDrop = EvRe.useValue(useConstant(() => p(
     draggingPositionDelta$,
     Ev.map(({ x, y }) =>
       !ref.current || !deleteBoxRef.current ? false :
@@ -82,7 +83,7 @@ const Box = ({ id, deleteBoxRef, onDrop: _onDrop }: { id: string, deleteBoxRef: 
   let didDrop = !isDragging && canDrop
   let didDropRef = useReffed(didDrop)
 
-  let positionDelta = useValue(useConstant(() => Ev.merge([
+  let positionDelta = EvRe.useValue(useConstant(() => Ev.merge([
     Ev.of({ x: 0, y: 0 }),
     draggingPositionDelta$,
     p(
@@ -95,7 +96,7 @@ const Box = ({ id, deleteBoxRef, onDrop: _onDrop }: { id: string, deleteBoxRef: 
     )
   ])))
 
-  let shouldShrink = useValue(useConstant(() => Ev.merge([
+  let shouldShrink = EvRe.useValue(useConstant(() => Ev.merge([
     Ev.of(false),
     p(
       transitionEnd$,
@@ -173,62 +174,6 @@ type Offset = {
   offsetTop: number,
   offsetWidth: number,
   offsetHeight: number
-}
-
-type UseValue = 
-  < T$ extends Ev.EventStream<unknown>
-  , A extends (T$ extends Ev.HasFirstValue ? [] : [firstValue?: unknown])
-  >
-  ($: T$, ...maybeFirstValue: A) =>
-    | (T$ extends Ev.EventStream<infer T> ? T : never)
-    | ( T$ extends Ev.HasFirstValue
-          ? never
-          : A extends [] ? undefined :
-            A extends [infer X] ? X :
-            undefined
-      )
-
-type UseValueImpl = 
-  ($: Ev.EventStream<"T">, initialValue: "T") => "T"
-
-const useValueImpl: UseValueImpl = ($, initialValue) => {
-  type T = typeof $ extends Ev.EventStream<infer T> ? T : never
-
-  let valueRef = Re.useRef(initialValue as T)
-  let forceUpdate = Re.useReducer(a => a + 1, 0)[1]
-
-  let isSyncCall = Re.useRef(true)
-  let unsubscribe = useConstant(() =>
-    p($, Ev.subscribe(value => {
-      valueRef.current = value
-      if (!isSyncCall.current) forceUpdate()
-      isSyncCall.current = false
-    }))
-  )
-
-  Re.useEffect(() => {
-    return unsubscribe
-  }, [])
-
-  return valueRef.current
-}
-
-const useValue = useValueImpl as UseValue
-
-type EvPrevious =
-  <T, S extends [seed: unknown] | []>($: Ev.EventStream<T>, ...a: S) =>
-    Ev.EventStream<T | (S extends [infer I] ? I : never)>
-
-const evPrevious: EvPrevious = ($, ...a) => s => {
-  let hasSeed = a.length === 1
-  let pV = a[0];
-  let didEmitFirst = false;
-  let hasPrev = didEmitFirst || hasSeed
-  return $(v => {
-    if (hasPrev) s(pV as any)
-    pV = v;
-    if (!didEmitFirst) didEmitFirst = true
-  })
 }
 
 const useConstant = <T,>(f: () => T) =>

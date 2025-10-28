@@ -312,6 +312,37 @@ export const fromEventTarget: FromEventTarget = (t, n) => s => {
 
 
 
+// ----------------------------------------
+// Miscellenous 
+
+type Previous =
+  <T$ extends EventStream<unknown>, S extends [seed: unknown] | []>($: T$, ...a: S) =>
+    & EventStream<
+        | (T$ extends EventStream<infer T> ? T : never)
+        | (S extends [infer I] ? I : never)
+      >
+    & ( S extends [unknown]
+          ? T$ extends HasFirstValue ? HasFirstValue : unknown
+          : unknown
+      )
+
+type PreviousImpl = 
+  ($: EventStream<"T">, ...a: ["U"] | []) =>
+    EventStream<"T" | "U">
+
+const previousImpl: PreviousImpl = ($, ...a) => s => {
+  let hasSeed = a.length === 1
+  let pV: "T" | "U" | undefined = a[0];
+  let didEmitFirst = false;
+  let hasPrev = didEmitFirst || hasSeed
+  return p($, subscribe(v => {
+    if (hasPrev) s(pV!)
+    pV = v;
+    if (!didEmitFirst) didEmitFirst = true
+  }))
+}
+
+export const previous = previousImpl as Previous
 
 
 
