@@ -65,7 +65,7 @@ type MapImpl =
     ($: EventStream<"T">) => EventStream<"U">
 
 export const mapImpl: MapImpl = f =>
-  $ => s => p($, subscribe(t => s(f(t))))
+  $ => s => $(t => s(f(t)))
 
 export const map = mapImpl as Map
 
