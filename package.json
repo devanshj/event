@@ -8,7 +8,7 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "react.ts"
+      "react/index.ts"
     ]
   },
   "files": [

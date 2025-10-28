@@ -1,5 +1,5 @@
 import * as Re from "react"
-import * as Ev from "."
+import * as Ev from "../"
 import { pipeWith as p } from "pipe-ts"
 
 type UseValue = 
