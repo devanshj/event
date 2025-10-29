@@ -1,6 +1,6 @@
 {
   "name": "@devanshj/event",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple FRP library",
   "type": "module",
   "main": "dist/devanshj-event.cjs.js",

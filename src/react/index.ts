@@ -24,12 +24,10 @@ const useValueImpl: UseValueImpl = ($, initialValue) => {
   let valueRef = Re.useRef(initialValue as T)
   let forceUpdate = Re.useReducer(a => a + 1, 0)[1]
 
-  let isSyncSubscriberCall = Re.useRef(true)
   let unsubscribe = Re.useState(() =>
     p($, Ev.subscribe(value => {
       valueRef.current = value
-      if (!isSyncSubscriberCall.current) forceUpdate()
-      isSyncSubscriberCall.current = false
+      forceUpdate()
     }))
   )[0]
 
