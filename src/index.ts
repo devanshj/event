@@ -1,4 +1,4 @@
-import { pipeWith as p } from "pipe-ts"
+import p from "@devanshj/pipe"
 
 // ----------------------------------------
 // Definition
@@ -84,7 +84,7 @@ type FilterImpl =
     ($: EventStream<"T">) => EventStream<"T">
 
 const filterImpl: FilterImpl = f =>
-  $ => s => p($, subscribe(t => f(t) && s(t)))
+  $ => s => $(t => f(t) && s(t))
 
 export const filter = filterImpl as Filter
 

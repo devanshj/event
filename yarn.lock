@@ -247,6 +247,11 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
+"@devanshj/pipe@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@devanshj/pipe/-/pipe-0.0.2.tgz#e326aef8fb5c8d6d4051edfd01091a51595c8138"
+  integrity sha512-LBeMZ5rXWxwC3HP9bqfXbj+km3QaC6JsjlBFJj7YVgp2urXqCK2oSkGc6KhNfX8JiVByHI9pYt5A3BoMWpwwIQ==
+
 "@jridgewell/gen-mapping@^0.3.12", "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz#6342a19f44347518c93e43b1ac69deb3c4656a1f"
@@ -1002,11 +1007,6 @@ picomatch@^2.2.2, picomatch@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
-
-pipe-ts@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/pipe-ts/-/pipe-ts-0.0.9.tgz#9c1c9856348e5eeb1250b4c6d291b776b55556ca"
-  integrity sha512-j5DfveOe0xC4hIK6/FRJ+zHjvrgbMO+kgnM4ZsSQqWZZL8fgCYCAu7TXdkVLavX/2nALm32yBVDixW8+/aYtGA==
 
 pirates@^4.0.1:
   version "4.0.7"

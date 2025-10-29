@@ -2,7 +2,7 @@ import * as Re from "react"
 import * as ReDom from "react-dom/client"
 import * as Ev from "@devanshj/event"
 import * as EvRe from "@devanshj/event/react"
-import { pipeWith as p } from "pipe-ts"
+import p from "@devanshj/pipe"
 import "./main.css"
 
 const App = () => {

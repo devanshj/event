@@ -1,6 +1,6 @@
 {
   "name": "@devanshj/event",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simple FRP library",
   "type": "module",
   "main": "dist/devanshj-event.cjs.js",
@@ -24,9 +24,6 @@
     "type": "git",
     "url": "git+https://github.com/devanshj/event.git"
   },
-  "scripts": {
-    "postinstall": "preconstruct dev"
-  },
   "devDependencies": {
     "@babel/preset-typescript": "^7.28.5",
     "@preconstruct/cli": "^2.8.12",
@@ -34,7 +31,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "pipe-ts": "^0.0.9",
+    "@devanshj/pipe": "^0.0.2",
     "react": "^19.2.0"
   },
   "peerDependencies": {

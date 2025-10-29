@@ -160,6 +160,11 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
+"@devanshj/pipe@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@devanshj/pipe/-/pipe-0.0.2.tgz#e326aef8fb5c8d6d4051edfd01091a51595c8138"
+  integrity sha512-LBeMZ5rXWxwC3HP9bqfXbj+km3QaC6JsjlBFJj7YVgp2urXqCK2oSkGc6KhNfX8JiVByHI9pYt5A3BoMWpwwIQ==
+
 "@esbuild/aix-ppc64@0.25.11":
   version "0.25.11"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.25.11.tgz#2ae33300598132cc4cf580dbbb28d30fed3c5c49"

@@ -1,6 +1,6 @@
 import * as Re from "react"
 import * as Ev from "../"
-import { pipeWith as p } from "pipe-ts"
+import p from "@devanshj/pipe"
 
 type UseValue = 
   < T$ extends Ev.EventStream<unknown>
